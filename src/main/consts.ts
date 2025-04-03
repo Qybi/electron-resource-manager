@@ -1,0 +1,1 @@
+export const RESOURCE_POLLING_RATE = 500;
