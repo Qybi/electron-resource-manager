@@ -9,6 +9,8 @@ export function pollingResources(window: BrowserWindow) {
     const cpu = await getCpuUsage();
     const ram = await getRamUsage();
     const disk = await getDiskUsage();
+    // this creates an event called 'os-stats' and sends the data on it.
+    // the frontend CAN subscribe to this event in the preload/index.ts file that will expose an api for the renderer (frontend) process
     window.webContents.send("os-stats", { cpu, ram, disk });
   }, RESOURCE_POLLING_RATE);
 }
