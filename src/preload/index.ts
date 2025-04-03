@@ -19,6 +19,7 @@ const api: Api = {
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
+    // this methods can be used in the frontend with window.<whatever>.<method>
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
   } catch (error) {
