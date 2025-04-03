@@ -1,4 +1,4 @@
-# electron-app
+# Electron - Resource manager
 
 A small app to learn how Electron functions
 Basic resource manager developed using Electron - React - Typescript
