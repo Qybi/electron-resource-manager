@@ -1,12 +1,9 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
+import { Api } from "../types/api";
 
 declare global {
   interface Window {
     electron: ElectronAPI;
     api: Api;
   }
-}
-export interface Api {
-  getStaticData: () => Promise<any>;
-  subscribeStats: (callback: (stats: any) => void) => void;
 }
