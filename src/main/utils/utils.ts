@@ -1,4 +1,4 @@
-import { ipcMain, WebContents } from "electron";
+import { ipcMain, ipcRenderer, WebContents } from "electron";
 import { EventPayloadMapping } from "../../types/events/eventPayloadMapping";
 
 /**
@@ -13,6 +13,7 @@ import { EventPayloadMapping } from "../../types/events/eventPayloadMapping";
  * for different events you just need to update the EventPayloadMapping interface with the event name as the key and the payload type as the result type of the handler
  */
 
+//#region main process
 export function ipcMainHandle<Key extends keyof EventPayloadMapping>(
   key: Key,
   handler: () => EventPayloadMapping[Key]
@@ -28,3 +29,22 @@ export function ipcWebContentsSend<Key extends keyof EventPayloadMapping>(
 ) {
   webContents.send(key, payload);
 }
+//#endregion
+
+//#region renderer process
+export function ipcInvoke<Key extends keyof EventPayloadMapping>(
+  key: Key
+): Promise<EventPayloadMapping[Key]> {
+  return ipcRenderer.invoke(key);
+}
+
+export function ipcOn<Key extends keyof EventPayloadMapping>(
+  key: Key,
+  callback: (payload: EventPayloadMapping[Key]) => void
+) {
+  ipcRenderer.on(key, (_ /* event obj */, payload) => {
+    callback(payload);
+  });
+}
+
+//#endregion
