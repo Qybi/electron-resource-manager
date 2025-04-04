@@ -2,6 +2,7 @@ import { Button, Space } from 'antd'
 import { useEffect } from 'react';
 
 function App(): JSX.Element {
+  
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   // calling the method in the useEffect to avoid subscribing multiple times
@@ -10,17 +11,15 @@ function App(): JSX.Element {
     window.api.subscribeStats((stats) => console.log(stats));
   }, []);
 
-  const printStaticStats = (): void => {
+  const printStaticStats = async (): Promise<any> => {
     // @ts-ignore
-    const stats = window.api.getStaticData()
-    console.log(stats)
+    console.log(await window.api.getStaticData())
   };
   
   return (
     <>
       <Space direction="vertical" size={16}>
-        <Button onClick={ipcHandle}>Click me</Button>
-        <Button onClick={printStaticStats} type="primary">Click me 2</Button>
+        <Button onClick={printStaticStats} type="primary">Button</Button>
       </Space>
     </>
   )
