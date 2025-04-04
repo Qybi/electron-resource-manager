@@ -7,6 +7,6 @@ declare global {
   }
 }
 export interface Api {
-  getStaticData: () => {};
+  getStaticData: () => Promise<any>;
   subscribeStats: (callback: (stats: any) => void) => void;
 }
