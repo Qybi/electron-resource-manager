@@ -1,12 +1,11 @@
 import { contextBridge } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
-import { getStaticData } from "../main/app/resourceManager";
 import { Api } from "./index.d";
 
 // Custom APIs for renderer
 // define here functions that will be exposed to the renderer (frontend)
 const api: Api = {
-  getStaticData: () => getStaticData(),
+  getStaticData: () => electronAPI.ipcRenderer.invoke("get-static-data"),
   subscribeStats: (callback: (stats: any) => void) => {
     electronAPI.ipcRenderer.on("os-stats", (_ /*event*/, data) => {
       callback(data);

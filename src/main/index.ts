@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { pollingResources } from "./app/resourceManager";
+import { getStaticData, pollingResources } from "./app/resourceManager";
 
 function createWindow(): BrowserWindow {
   // Create the browser window.
@@ -57,8 +57,13 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  // IPC test
+  // IPCs
+  // send/on methods are the old way and do not expect a response.
   ipcMain.on("ping", () => console.log(process.env.NODE_ENV));
+  // invoke/handle methods support async/await and are more of a tcp type connection handling
+  ipcMain.handle("get-static-data", () => {
+    return getStaticData();
+  });
 
   const mainWindow = createWindow();
 
