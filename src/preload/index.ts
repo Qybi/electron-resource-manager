@@ -5,9 +5,9 @@ import { Api } from "../types/api";
 // Custom APIs for renderer
 // define here functions that will be exposed to the renderer (frontend)
 const api: Api = {
-  getStaticData: () => electronAPI.ipcRenderer.invoke("get-static-data"),
+  getStaticData: () => electronAPI.ipcRenderer.invoke("getStaticData"),
   subscribeStats: (callback) => {
-    electronAPI.ipcRenderer.on("os-stats", (_ /*event*/, data) => {
+    electronAPI.ipcRenderer.on("stats", (_ /*event*/, data) => {
       callback(data);
     });
   }

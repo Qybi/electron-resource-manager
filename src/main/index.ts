@@ -3,6 +3,7 @@ import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { getStaticData, pollingResources } from "./app/resourceManager";
+import { ipcMainHandle } from "./utils/utils";
 
 function createWindow(): BrowserWindow {
   // Create the browser window.
@@ -61,7 +62,8 @@ app.whenReady().then(() => {
   // send/on methods are the old way and do not expect a response.
   ipcMain.on("ping", () => console.log(process.env.NODE_ENV));
   // invoke/handle methods support async/await and are more of a tcp type connection handling
-  ipcMain.handle("get-static-data", () => {
+  // using the typesafe wrapper
+  ipcMainHandle("getStaticData", () => {
     return getStaticData();
   });
 
