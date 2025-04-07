@@ -1,5 +1,7 @@
-import { ipcMain, ipcRenderer, WebContents } from "electron";
+import { ipcMain, ipcRenderer, WebContents, WebFrameMain } from "electron";
 import { EventPayloadMapping } from "../../types/events/eventPayloadMapping";
+import { getUiPath, isDev } from "./devUtils";
+import { pathToFileURL } from "url";
 
 /**
  * This is a generalized function to handle ipcMain TYPESAFE events.
@@ -19,7 +21,10 @@ export function ipcMainHandle<Key extends keyof EventPayloadMapping>(
   handler: () => EventPayloadMapping[Key]
 ) {
   // ipcMain.handle the default electron method
-  ipcMain.handle(key, () => handler());
+  ipcMain.handle(key, (event) => {
+    validateEventFrame(event.senderFrame);
+    return handler();
+  });
 }
 
 export function ipcWebContentsSend<Key extends keyof EventPayloadMapping>(
@@ -42,9 +47,22 @@ export function ipcOn<Key extends keyof EventPayloadMapping>(
   key: Key,
   callback: (payload: EventPayloadMapping[Key]) => void
 ) {
-  ipcRenderer.on(key, (_ /* event obj */, payload) => {
+  const cb = (_: Electron.IpcRendererEvent, payload: any) => {
     callback(payload);
-  });
+  };
+  ipcRenderer.on(key, cb);
+  // this return a function that can be used to unsubscribe
+  return () => ipcRenderer.off(key, cb);
 }
 
 //#endregion
+
+export function validateEventFrame(frame: WebFrameMain | null) {
+  if (isDev() && new URL(frame?.url ?? "").host === "localhost:5173") {
+    return;
+  }
+
+  if (frame?.url ?? "" !== pathToFileURL(getUiPath()).toString()) {
+    throw new Error("Malicious event");
+  }
+}
