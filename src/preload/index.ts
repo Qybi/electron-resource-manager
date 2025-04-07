@@ -9,7 +9,7 @@ import { Stats } from "../types/stats";
 const api: Api = {
   getStaticData: () => ipcInvoke("getStaticData"),
   subscribeStats: (callback) => {
-    ipcOn("stats", (data: Stats) => {
+    return ipcOn("stats", (data: Stats) => {
       callback(data);
     });
   }
