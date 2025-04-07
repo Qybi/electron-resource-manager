@@ -25,7 +25,8 @@
     "@electron-toolkit/utils": "^4.0.0",
     "antd": "^5.24.6",
     "electron-updater": "^6.3.9",
-    "os-utils": "^0.0.14"
+    "os-utils": "^0.0.14",
+    "rechart": "^0.0.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
